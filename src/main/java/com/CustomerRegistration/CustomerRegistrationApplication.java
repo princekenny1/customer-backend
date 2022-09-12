@@ -7,7 +7,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.CustomerRegistration.Entities.CustomerEntity;
+import com.CustomerRegistration.Entities.Users;
 import com.CustomerRegistration.Repository.CustomerRepository;
+import com.CustomerRegistration.Repository.UsersRepo;
 
 
 @SpringBootApplication
@@ -19,6 +21,9 @@ public class CustomerRegistrationApplication implements CommandLineRunner{
 		
 	@Autowired
 	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private UsersRepo usersRepo;
 	
 	@Override
 	public void run(String... args) throws Exception {
@@ -57,7 +62,14 @@ public class CustomerRegistrationApplication implements CommandLineRunner{
 				customer5.setPhoneNumber("+250786498343");
 				
 				customerRepository.save(customer5);
-		
+				
+				//creating a first-run user
+				Users user1 = new Users();
+				user1.setEmail("kennyprince022@gmail.com");
+				user1.setName("kenny");
+				user1.setPassword("Kenny123");
+				user1.setRoles("admin");
+				
+				usersRepo.save(user1);
 	}
-
 }

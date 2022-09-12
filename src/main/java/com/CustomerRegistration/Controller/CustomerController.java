@@ -18,29 +18,33 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.ResourceAccessException;
 
 import com.CustomerRegistration.Entities.CustomerEntity;
+import com.CustomerRegistration.Entities.Users;
 import com.CustomerRegistration.Repository.CustomerRepository;
+import com.CustomerRegistration.Repository.UsersRepo;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/customers/")
 @CrossOrigin
 public class CustomerController {
 	
 	@Autowired
 	private CustomerRepository customerRepository;
-	@GetMapping("/customers")
+	@Autowired
+	private UsersRepo usersRepo;
+	@GetMapping
 	public List<CustomerEntity> getAllCustomers(){
 		return customerRepository.findAll();
 	}
-	@PostMapping("/customers")
+	@PostMapping
 	public CustomerEntity newCustomer(@RequestBody CustomerEntity customerEntity){
 		return customerRepository.save(customerEntity);
 	}
-	@GetMapping("/customers/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<CustomerEntity>  getOptionalCustomer(@PathVariable Long id){
 		CustomerEntity customerEntity = customerRepository.findById(id).orElseThrow( ()-> new ResourceAccessException("The customer with id:"+id+"does not exist"));
 		return ResponseEntity.ok(customerEntity);
 	}
-	@PutMapping("/customers/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<CustomerEntity> UpdateCustomers(@PathVariable Long id,@RequestBody CustomerEntity customerEntityData){
 		CustomerEntity customerEntity = customerRepository.findById(id).orElseThrow( ()-> new ResourceAccessException("The customer with id:"+id+"does not exist"));
 		customerEntity.setUserName(customerEntityData.getUserName());
@@ -51,8 +55,7 @@ public class CustomerController {
 		return ResponseEntity.ok(UpdateCustomer);
 		
 	}
-	
-	@DeleteMapping("/customers/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<Map<String, Boolean>> deleteCustomer(@PathVariable Long id){
 		CustomerEntity customerEntity = customerRepository.findById(id).orElseThrow( ()-> new ResourceAccessException("The customer with id:"+id+"does not exist"));
 		customerRepository.delete(customerEntity);
@@ -60,4 +63,9 @@ public class CustomerController {
 		response.put("deleted", Boolean.TRUE);
 		return ResponseEntity.ok(response);
 	}
+	/*
+	@PostMapping("/users")
+	public Users newUser(@RequestBody Users users){
+		return usersRepo.save(users);
+	}*/
 }
